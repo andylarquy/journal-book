@@ -1,6 +1,6 @@
 import dummyNotes from "../dummyData/dummyNotes"
 import dummyNotebooks from "../dummyData/dummyNotebooks"
-import dummyUsers from "../dummyData/dummyUsers"
+import userResolvers from "./users/userResolver"
 
 const root = {
     notes: () => {
@@ -9,8 +9,8 @@ const root = {
     notebooks: () => {
         return dummyNotebooks
     },
-    users: () => {
-        return dummyUsers
+    getListUserProfile: async (): Promise<any[]> => {
+        return await userResolvers.getListUserProfile()
     }
 }
 

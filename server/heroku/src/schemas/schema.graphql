@@ -5,7 +5,7 @@ type User {
 }
 
 type Query {
-    users: [User]
+    getListUserProfile: [User]
 }
 
 type Notebook {
