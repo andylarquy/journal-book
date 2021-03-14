@@ -1,0 +1,52 @@
+type User {
+    id: ID!,
+    name: String!,
+    notebooks: [Notebook]
+}
+
+type Notebook {
+    id: ID!,
+    title: String!,
+    notes: [Note]
+}
+
+type Note {
+    id: ID!,
+    title: String!
+    content: String
+}
+
+input UserInput {
+    name: String!
+}
+
+input NotebookInput {
+    name: String!
+    title: [NoteInput]
+}
+
+input NoteInput {
+    title: String!
+    content: String
+}
+
+type Query {
+    getListUserProfile: [User]
+}
+
+type Query {
+    getNotebooksOfUser(userId: ID!): [Notebook]
+}
+
+
+type Query {
+    notebooks: [Notebook]
+}
+
+type Query {
+    notes: [Note]
+}
+
+type Mutation {
+    createUser(userInput: UserInput): User
+}
