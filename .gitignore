@@ -1,5 +1,2 @@
-# Firebase project config files
-firebase
-
 **/*node_modules
 **/*.env
