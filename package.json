@@ -1,6 +1,6 @@
 {
   "name": "journal-book-server",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "This is the API Rest server solution for the Journal Book project",
   "main": "app.js",
   "author": "Andres Suarez",
@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts, .",
     "lint:fix": "eslint --fix --ext .ts .",
-    "prepare": "cd ../../ husky install"
+    "prepare": "husky install"
   },
   "dependencies": {
     "class-transformer": "^0.4.0",
