@@ -1,9 +1,8 @@
-import express from "express"
+import firebaseDbFormatter from 'firebasedb-nest-formatter'
+import express, { json } from "express"
 import { graphqlHTTP } from "express-graphql"
-import schema from "./schemas/schemas"
-import root from "./resolvers/resolvers"
+import schema from "./services/graphql/schemas/schemas"
 import dotenv from "dotenv"
-dotenv.config()
 
 import firebaseConfigFile from '../firebase.sdk.config'
 
@@ -14,6 +13,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 
+dotenv.config()
 
 const app = express()
 const port = process.env.PORT
@@ -25,56 +25,18 @@ const firebaseConfig = firebaseConfigFile
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,
-  rootValue: root,
   graphiql: true,
 }))
 
 app.get('/debug', async (req, res) => {
   try {
     const db = firebase.database()
-
-    const usersData = await db.ref('users/').once('value')
-    const users = usersData.val()
-
-    const arrayUsers: any = []
-
-    // TODO: Fix this absolute piece of garbage
-    Object.entries(users).forEach(user => {
-      const userBody = user[1] as { notebooks }
-      //console.log({ id: user[0], ...userBody })
-
-      const tempUser = { id: user[0], ...userBody, notebooks: <any>[] }
-      const tempNotebooks: any = []
-      let tempNotes: any = []
-      let tempNotebook = {id:'', notes: []}
-
-      Object.entries(userBody.notebooks).forEach(notebook => {
-        const notebookBody = notebook[1] as { notes }
-        //console.log({ id: notebook[0], ...notebookBody })
-        tempNotebooks.push({ id: notebook[0], ...notebookBody })
-        tempNotebook = { id: notebook[0], ...notebookBody }
-
-        Object.entries(notebookBody.notes).forEach(note => {
-          const noteBody = Object.assign({}, note[1])
-          //console.log('{ id: note[0], ...noteBody })
-          tempNotes.push({ id: note[0], ...noteBody })
-        })
-
-        tempNotebook.notes = tempNotes
-        tempUser.notebooks.push(tempNotebook)
-        tempNotebook = {id:'', notes: []}
-        tempNotes = []
-
-      })
-       
-      arrayUsers.push(tempUser)
-    })
-
-    res.json(arrayUsers)
+    const usersData = await db.ref(`users/-JiGh_31GA20JabpZBfa`).once('value')
+    res.json(firebaseDbFormatter(usersData.val()))    
   } catch (e) {
-    res.status(400)
-    res.json({ message: e.message })
+    throw Error(e.message)
   }
+  return 4
 })
 
 
