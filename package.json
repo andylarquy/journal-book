@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts, .",
     "lint:fix": "eslint --fix --ext .ts .",
-    "prepare": "cd ../../ husky install"
+    "prepare": "husky install"
   },
   "dependencies": {
     "class-transformer": "^0.4.0",
