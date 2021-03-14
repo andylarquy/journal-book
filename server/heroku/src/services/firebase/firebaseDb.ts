@@ -5,7 +5,7 @@ dotenv.config()
 import firebase from 'firebase/app'
 import 'firebase/database'
 
-import firebaseConfigFile from '../../firebase.sdk.config'
+import firebaseConfigFile from '../../../firebase.sdk.config'
 
 // Initialize Firebase
 !firebase.apps.length ? firebase.initializeApp(firebaseConfigFile) : firebase.app()
