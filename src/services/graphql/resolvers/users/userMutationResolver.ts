@@ -1,8 +1,9 @@
+import { UserInput } from '../../generated/API'
 import { User } from '../../../../domain/User'
 import db from '../../../firebase/firebaseDb'
 
 // TODO: Define the UserInput type
-export async function createUser(userInput: any): Promise<User> {
+export async function createUser(userInput: UserInput): Promise<User> {
     User.validateUserInput(userInput)
 
     // TODO: Wrap this to all the project using generics
