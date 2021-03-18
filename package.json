@@ -1,6 +1,6 @@
 {
   "name": "journal-book-server",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "This is the API Rest server solution for the Journal Book project",
   "main": "app.js",
   "author": "Andres Suarez",
