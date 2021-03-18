@@ -1,7 +1,7 @@
 import dummyNotes from "../../../dummyData/dummyNotes"
 import dummyNotebooks from "../../../dummyData/dummyNotebooks"
-import userResolvers from "./users/userResolver"
-import { User } from "domain/User"
+import userResolvers from "./users/userResolver" 
+import { User, UserInput } from '../generated/API'
 
 const resolvers = {
     Query: {
@@ -11,7 +11,7 @@ const resolvers = {
         notebooks: () => {
             return dummyNotebooks
         },
-        getListUserProfile: async (): Promise<any[]> => {
+        getListUserProfile: async (): Promise<User[]> => {
             return await userResolvers.getListUserProfile()
         },
         getNotebooksOfUser: async ({ userId }) => {
@@ -20,7 +20,7 @@ const resolvers = {
     },
 
     Mutation: {
-        createUser: async (_, { userInput }): Promise<User> => await userResolvers.createUser(userInput)
+        createUser: async (_: unknown, {userInput}: {userInput: UserInput}): Promise<User> => await userResolvers.createUser(userInput)
     }
 }
 

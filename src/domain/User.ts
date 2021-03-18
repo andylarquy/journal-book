@@ -7,7 +7,7 @@ export class User {
     notebooks: Notebook[]
     
     static validateUserInput(userInput: any): void{
-        if(!userInput.name) throw new Error('Attempting to create a user without ID')
+        if(!userInput.name) throw new Error('Attempting to create a user without Name')
     }
 
     static validateUser(user: any): void{

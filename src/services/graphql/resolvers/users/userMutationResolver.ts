@@ -1,8 +1,10 @@
+import { UserInput } from '../../generated/API'
+import { createOnFirebaseDB } from '../../../firebase/firebaseDbUtils'
 import { User } from '../../../../domain/User'
 import db from '../../../firebase/firebaseDb'
 
 // TODO: Define the UserInput type
-export async function createUser(userInput: any): Promise<User> {
+export async function createUser(userInput: UserInput): Promise<User> {
     User.validateUserInput(userInput)
 
     // TODO: Wrap this to all the project using generics
@@ -10,5 +12,5 @@ export async function createUser(userInput: any): Promise<User> {
     const newUserEntry = (await (await dbResponse).get()).val()
     const newUserId = (await dbResponse).key
 
-    return User.createFrom({id: newUserId, ...newUserEntry})
+    return createOnFirebaseDB<User>('users', {id: newUserId, ...newUserEntry}, User)
 }

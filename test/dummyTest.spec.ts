@@ -1,0 +1,5 @@
+describe('Dummy test suite', () => {
+    it('Simple test', () => {
+        expect(1).toBe(1)
+    })
+})

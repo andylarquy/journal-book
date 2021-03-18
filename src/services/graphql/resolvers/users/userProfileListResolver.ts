@@ -1,7 +1,8 @@
 import db from '../../../firebase/firebaseDb'
 import firebaseDbFormatter from 'firebasedb-nest-formatter'
+import { User } from '../../generated/API'
 
-export async function getListUserProfile() {
+export async function getListUserProfile(): Promise<User[]> {
   try {
     const usersData = await db.ref('users/').once('value')
     return firebaseDbFormatter(usersData.val())
