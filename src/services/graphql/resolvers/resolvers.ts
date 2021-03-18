@@ -20,7 +20,7 @@ const resolvers = {
     },
 
     Mutation: {
-        createUser: async (_: unknown, userInput: UserInput): Promise<User> => await userResolvers.createUser(userInput)
+        createUser: async (_: unknown, {userInput}: {userInput: UserInput}): Promise<User> => await userResolvers.createUser(userInput)
     }
 }
 
