@@ -1,45 +1,63 @@
-import firebaseDbFormatter from 'firebasedb-nest-formatter'
 import express, { json } from "express"
 import { graphqlHTTP } from "express-graphql"
 import schema from "./services/graphql/schemas/schemas"
 import dotenv from "dotenv"
 
-import firebaseConfigFile from '../firebase.sdk.config'
+//Firebase Admin - Required to user authentication
+import admin from 'firebase-admin'
 
-// Firebase Core Service
-import firebase from 'firebase/app'
-
-//Firebase Services
-import 'firebase/auth'
-import 'firebase/database'
+import { altairExpress } from 'altair-express-middleware'
 
 dotenv.config()
 
+
 const app = express()
-const port = process.env.PORT
+const port = process.env.PORT || 8080
 
-const firebaseConfig = firebaseConfigFile
+const getAuthTokenHeader = (req: any) => req.headers.authorization.split(' ')[1]
 
-// Initialize Firebase
-!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
+const userAuthentication = async (req, res, next) => {
+  try {
+    const idToken = getAuthTokenHeader(req)
+    const user = await admin.auth().verifyIdToken(idToken)
+    res.locals.uid = user.uid
+    //TODO: Fix this shit
+    res.locals.provider = Object.keys(user.firebase.identities)[0].split('.com')[0]
+
+    next()
+  } catch (error) {
+    console.log(error)
+    res.status(401).json({ error: error.message })
+  }
+}
+
+app.use('/altair', altairExpress({
+  endpointURL: '/graphql',
+  subscriptionsEndpoint: `ws://localhost:8080/graphql`,
+  initialQuery: `{getNotebooksOfUser(userId: "id"){
+    id
+    title
+    notes{
+      id
+      title
+    }
+  }
+}`,
+}))
+
+app.use(userAuthentication)
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,
-  graphiql: true,
+  graphiql: true
 }))
 
+
 app.get('/debug', async (req, res) => {
-  try {
-    const db = firebase.database()
-    const usersData = await db.ref(`users/-JiGh_31GA20JabpZBfa`).once('value')
-    res.json(firebaseDbFormatter(usersData.val()))    
-  } catch (e) {
-    throw Error(e.message)
-  }
-  return 4
+
 })
 
 
-app.listen(port || 8080, () => {
-  console.log(`server started on port ${port || 8080}`)
+app.listen(port, () => {
+  console.log(`server started on port ${port}`)
 })

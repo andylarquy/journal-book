@@ -1,6 +1,6 @@
 import dummyNotes from "../../../dummyData/dummyNotes"
 import dummyNotebooks from "../../../dummyData/dummyNotebooks"
-import userResolvers from "./users/userResolver" 
+import userResolvers from "./users/userResolver"
 import { User, UserInput } from '../generated/API'
 
 const resolvers = {
@@ -11,17 +11,24 @@ const resolvers = {
         notebooks: () => {
             return dummyNotebooks
         },
-        getListUserProfile: async (): Promise<User[]> => {
-            return await userResolvers.getListUserProfile()
+        getListUserProfile: async () => {
+            //  return await userResolvers.getListUserProfile()
         },
         getNotebooksOfUser: async ({ userId }) => {
-            return await userResolvers.getNotebooksOfUser(userId)
+            //return await userResolvers.getNotebooksOfUser(userId)
         }
     },
 
     Mutation: {
-        createUser: async (_: unknown, {userInput}: {userInput: UserInput}): Promise<User> => await userResolvers.createUser(userInput)
+        createUser: async (_: unknown, { userInput }: { userInput: UserInput }, context): Promise<User> => (
+            await userResolvers.createUser(userInput, { uid: context.res.locals.uid, provider: context.res.locals.provider }))
     }
+}
+
+// Types
+export type Auth = {
+    uid: string,
+    provider: string
 }
 
 export default resolvers
